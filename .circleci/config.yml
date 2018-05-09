@@ -20,7 +20,12 @@ jobs:
       # Customize the JVM maximum heap limit
       JVM_OPTS: -Xmx3200m
       TERM: dumb
-    
+
+    dependencies:
+      override:
+        - chmod +x gradlew
+        - ./gradlew dependencies
+
     steps:
       - checkout
 
@@ -31,9 +36,7 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
-      override:
-          - chmod +x gradlew
-          - ./gradlew dependencies
+      - run: gradle dependencies
 
       - save_cache:
           paths:
