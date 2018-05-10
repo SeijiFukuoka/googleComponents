@@ -37,7 +37,7 @@ jobs:
 
       - run:
           name: Build
-          command: ./gradlew clean check assemble assembleAndroidTest
+          command: ./gradlew clean check build assembleAndroidTest
 
       - save_cache:
           paths:
