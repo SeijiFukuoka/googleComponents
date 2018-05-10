@@ -2,6 +2,16 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
+// Create a variable called keystorePropertiesFile, and initialize it to your
+// keystore.properties file, in the rootProject folder.
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+
+// Initialize a new Properties() object called keystoreProperties.
+def keystoreProperties = new Properties()
+
+// Load your keystore.properties file into the keystoreProperties object.
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     compileSdkVersion 27
 
@@ -30,15 +40,16 @@ android {
         }
 
         release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
             storeFile file("$rootDir/distribution/release.jks")
-            storePassword System.env.RELEASE_STORE_PASSWORD
-            keyAlias System.env.RELEASE_KEY_ALIAS
-            keyPassword System.env.RELEASE_KEY_PASSWORD
+            storePassword keystoreProperties['storePassword']
         }
     }
 
     buildTypes {
         debug{
+            applicationIdSuffix '.dev'
             signingConfig signingConfigs.debug
         }
         release {
@@ -50,9 +61,10 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
+    implementation "com.android.support:appcompat-v7:$versions.supportLibrary"
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation "com.google.firebase:firebase-core:$versions.googleServices"
 
     testImplementation 'junit:junit:4.12'
 
