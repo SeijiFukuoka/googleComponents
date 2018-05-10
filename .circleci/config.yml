@@ -35,6 +35,10 @@ jobs:
           name: Download Dependencies
           command: ./gradlew androidDependencies
 
+      - run:
+          name: Build
+          command: ./gradlew clean check assemble assembleAndroidTest
+
       - save_cache:
           paths:
             - ~/.gradle
